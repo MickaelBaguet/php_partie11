@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.3.1/sketchy/bootstrap.min.css">
     <style>
         .error{
             color: red;
@@ -10,13 +10,10 @@
             margin-top: 5px;
         }
         input[type=text]{
-            width: 80px;
+            width: 40px;
         }
         input[type=submit]{
-            border-radius: 40px;
-            color: white;
-            background-color: red;
-            border: 2px black solid;
+            border-radius: 50%;
         }
         input[type=submit]:hover{
             transform: scale(1.1);
@@ -46,10 +43,11 @@
                 <span class="error">* <?= !empty($_POST) && (is_numeric($_POST['chiffre2']) == false) ? 'Deuxième chiffre invalide !' : '' ;?></span>
             </div>
             <div class="my-3">
-                <input type="submit" name="addition" value="+"/>
-                <input type="submit" name="soustraction" value="-"/>
-                <input type="submit" name="multiplication" value="*"/>
-                <input type="submit" name="division" value="/"/>
+                <input type="submit" class="btn btn-outline-success" name="addition" value="+"/>
+                <input type="submit" class="btn btn-outline-info" name="soustraction" value="-"/>
+                <input type="submit" class="btn btn-outline-warning" name="multiplication" value="*"/>
+                <input type="submit" class="btn btn-outline-danger" name="division" value="/"/>
+                <input type="submit" class="btn btn-outline-primary" name="zero" value="RaZ"/>
             </div>
             <span><?= $error ?></span>
         </form>
@@ -57,9 +55,8 @@
             $number1 = $_POST['chiffre1'];
             $number2 = $_POST['chiffre2'];
             $numberPattern = '/^[0-9]+$/';
-            if (!preg_match($numberPattern, $number1) || !preg_match($numberPattern, $number2)) {
-                $error = 'Veuillez entrer des nombres valides !';
-            } else {
+             if (preg_match($numberPattern, $number1) && preg_match($numberPattern, $number2)) {
+                // var_dump($_POST);
                 if ($_POST['addition'] != ''){
                     $result = $number1 + $number2;
                 }
@@ -70,11 +67,20 @@
                     $result = $number1 * $number2;
                 }
                 if ($_POST['division'] != ''){
-                    $result = round($number1 / $number2, 2);
+                    if ($number2 == 0){
+                        $result = 'Division par zéro impossible';
+                    } else {
+                        $result = round($number1 / $number2, 2);
+                    }
                 }
+                if ($_POST['zero'] != ''){
+                    $_POST['chiffre1'] = 0;
+                    $_POST['chiffre2'] = 0;
+                }
+                // var_dump($result);
             }
         ?>
-        <p>Résultat : <?= $result ?></p>
+        <p class="display-4">Résultat : <?= $result ?></p>
     </div>
 </body>
 </html>
